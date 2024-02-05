@@ -9,7 +9,7 @@ namespace Norion.TollCalculator.Domain.Service
 {
     public interface ITollService
     {
-        Task<int> GetTollFee(Guid id);
+        Task<int> GetTotalTollFee(Guid id);
         Task<Guid> AddVehicle(Vehicle vehicle);
         Task AddPassage(Guid id, DateTime passageTime);
     }
