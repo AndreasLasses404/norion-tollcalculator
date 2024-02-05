@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Norion.TollCalculator.Api.DTOs;
+using Norion.TollCalculator.Api.Mappers;
 using Norion.TollCalculator.Domain.Models;
 using Norion.TollCalculator.Domain.Service;
 
@@ -11,39 +14,74 @@ namespace Norion.TollCalculator.Api.Controllers;
 public class TollController: ControllerBase 
 {
     private readonly ITollService _service;
-    public TollController(ITollService service)
+    private readonly IMapper _mapper;
+    public TollController(ITollService service, IMapper mapper)
     {
         _service = service;
-    }
-    // GET: api/<TollController>
-    [HttpGet]
-    public async Task<ActionResult> Get([FromBody] IVehicle vehicle)
-    {
-        return Ok(await _service.GetTollFee(vehicle));
+        _mapper = mapper;
     }
 
     // GET api/<TollController>/5
     [HttpGet("{id}")]
-    public string Get(int id)
+    public async Task<ActionResult> Get(Guid id)
     {
-        return "value";
+        return Ok(await _service.GetTollFee(id));
     }
 
     // POST api/<TollController>
     [HttpPost]
-    public void Post([FromBody] string value)
+    public async Task<ActionResult> Post([FromBody] PostVehicleDto vehicle)
     {
+        try
+        {
+            Vehicle specificVehicle = new Vehicle();
+            switch (vehicle.VehicleType)
+            {
+                case "Car":
+                    specificVehicle = _mapper.Map<Car>(vehicle);
+                    break;
+                case "Diplomat":
+                    specificVehicle = vehicle.ToDiplomat();
+                    break;
+                case "Emergency":
+                    specificVehicle = vehicle.ToEmergency();
+                    break;
+                case "Foreign":
+                    specificVehicle = vehicle.ToForeign();
+                    break;
+                case "Military":
+                    specificVehicle = vehicle.ToMilitary();
+                    break;
+                case "MotorBike":
+                    specificVehicle = vehicle.ToMotorBike();
+                    break;
+                case "Tractor":      
+                    specificVehicle = vehicle.ToTractor();
+                    break;
+            }
+            await  _service.AddVehicle(specificVehicle);
+            await _service.AddPassage(specificVehicle.Id, DateTime.Now);
+            return Ok(specificVehicle.Id);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
     }
 
     // PUT api/<TollController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public async Task<ActionResult> Put(Guid id)
     {
-    }
-
-    // DELETE api/<TollController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
-    {
+        try
+        {
+            await _service.AddPassage(id, DateTime.Now);
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

@@ -9,6 +9,9 @@ namespace Norion.TollCalculator.Domain.Repository
 {
     public interface ITollRepository
     {
-        public Task<int> GetTotalTollFee(IVehicle vehicle);
+        Task<int> GetTotalTollFee(Guid id);
+        Task AddPassage(Guid id, DateTime passageTime);
+        Task<Guid> AddVehicle(Vehicle vehicle);
+
     }
 }

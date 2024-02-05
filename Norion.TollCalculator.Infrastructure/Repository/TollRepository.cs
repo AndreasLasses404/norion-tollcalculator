@@ -36,14 +36,20 @@ namespace Norion.TollCalculator.Infrastructure.Repository
     public class TollRepository: ITollRepository
     {
         private readonly List<TollFee> TollFees = new();
+        private readonly List<Vehicle> vehicles = new List<Vehicle>();
 
         public TollRepository()
         {
-            TollFees = ReadTollFees("../TollCalculator.csv");
+            TollFees = ReadTollFees("../Norion.TollCalculator.Infrastructure/TollCalculator.csv");
         }
 
-        public async Task<int> GetTotalTollFee(IVehicle vehicle)
+        public async Task<int> GetTotalTollFee(Guid id)
         {
+            var vehicle = vehicles.FirstOrDefault(x => x.Id == id);
+
+            if (vehicle == null)
+                throw new NullReferenceException();
+
             DateTime intervalStart = vehicle.TotalDailyPassages[0];
             int tempFee = GetTollFee(intervalStart);
             int totalFee = 0;
@@ -89,7 +95,27 @@ namespace Norion.TollCalculator.Infrastructure.Repository
             return totalFee;
         }
 
-        public List<TollFee> ReadTollFees(string filePath)
+        public async Task AddPassage(Guid id, DateTime passageTime)
+        {
+            var vehicle = vehicles.FirstOrDefault(x => x.Id == id);
+            if (vehicle == null)
+                throw new NullReferenceException(nameof(vehicle));
+
+            vehicle.LastPassage = passageTime;
+            vehicle.TotalDailyPassages.Add(passageTime);
+
+            await Task.CompletedTask;
+        }
+
+        public async Task<Guid> AddVehicle(Vehicle vehicle)
+        {
+            vehicle.Id = Guid.NewGuid();
+            vehicles.Add(vehicle);
+            await Task.CompletedTask;
+            return vehicle.Id;
+        }
+
+        private List<TollFee> ReadTollFees(string filePath)
         {
             List<TollFee> tollFees = new List<TollFee>();
 
@@ -132,9 +158,9 @@ namespace Norion.TollCalculator.Infrastructure.Repository
         public int GetTollFee(DateTime date)
         {
             if (IsTollFreeDate(date)) return 0;
-            return TollFees.Where(t => t.StartTime >= date.TimeOfDay && t.EndTime <= date.TimeOfDay).Select(t => t.Amount).FirstOrDefault();
+            return TollFees.Where(t => t.StartTime <= date.TimeOfDay && t.EndTime >= date.TimeOfDay).Select(t => t.Amount).FirstOrDefault();
             //int hour = date.Hour;
-            //int minute = date.Minute;
+            //int minute = date.Minute; 
             //
             //if (hour == 6 && minute >= 0 && minute <= 29) return 8;
             //else if (hour == 6 && minute >= 30 && minute <= 59) return 13;

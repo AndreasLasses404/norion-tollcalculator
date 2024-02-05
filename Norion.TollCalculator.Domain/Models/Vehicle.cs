@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Norion.TollCalculator.Domain.Models
 {
-    public interface IVehicle
+    public class Vehicle
     {
-        bool IsTollExempt { get; set; }
-        string GetVehicleType();
-        DateTime LastPassage { get; set; }
-        List<DateTime> TotalDailyPassages { get; set; }
+        public Guid Id { get; set; }
+        public bool IsTollExempt { get; set; }
+        public DateTime LastPassage { get; set; }
+        public List<DateTime> TotalDailyPassages { get; set; } = new();
     }
 }

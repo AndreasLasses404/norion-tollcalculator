@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Norion.TollCalculator.Domain.Models
+namespace Norion.TollCalculator.Domain.Models;
+
+public class Tractor : Vehicle
 {
-    internal class Tractor : IVehicle
+    public Tractor()
     {
-        public bool IsTollExempt { get; set; } = true;
-        public DateTime LastPassage { get; set; }
-        public List<DateTime> TotalDailyPassages { get; set; } = new List<DateTime>();
-        public string GetVehicleType()
-        {
-            return "Tractor";
-        }
+        IsTollExempt = true;
+    }
+    public string GetVehicleType()
+    {
+        return "Tractor";
     }
 }

@@ -10,16 +10,31 @@ using System.Threading.Tasks;
 namespace Norion.TollCalculator.Application.Service;
 
 public class TollService : ITollService
-{
+{ 
+    
 
     private readonly ITollRepository _repository;
-    public TollService(ITollRepository repository) : base()
+    public TollService(ITollRepository repository)
     {
         _repository = repository;
 
     }
-    public async Task<int> GetTollFee(IVehicle vehicle)
+
+    public async Task AddPassage(Guid id, DateTime passageTime)
     {
-        return await _repository.GetTotalTollFee(vehicle);
+        await _repository.AddPassage(id, passageTime);
+        
+        await Task.CompletedTask;
+    }
+
+    public async Task<Guid> AddVehicle(Vehicle vehicle)
+    {
+        return await _repository.AddVehicle(vehicle);
+    }
+
+    public async Task<int> GetTollFee(Guid id)
+    {
+       
+        return await _repository.GetTotalTollFee(id);
     }
 }
