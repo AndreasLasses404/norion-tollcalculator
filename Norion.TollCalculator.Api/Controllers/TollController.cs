@@ -25,7 +25,14 @@ public class TollController: ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult> Get(Guid id)
     {
-        return Ok(await _service.GetTollFee(id));
+        try
+        {
+            return Ok(await _service.GetTollFee(id));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     // POST api/<TollController>
@@ -59,6 +66,7 @@ public class TollController: ControllerBase
                     specificVehicle = vehicle.ToTractor();
                     break;
             }
+
             await  _service.AddVehicle(specificVehicle);
             await _service.AddPassage(specificVehicle.Id, DateTime.Now);
             return Ok(specificVehicle.Id);
@@ -71,7 +79,7 @@ public class TollController: ControllerBase
     }
 
     // PUT api/<TollController>/5
-    [HttpPut("{id}")]
+    [HttpPut("{id}/Passages")]
     public async Task<ActionResult> Put(Guid id)
     {
         try

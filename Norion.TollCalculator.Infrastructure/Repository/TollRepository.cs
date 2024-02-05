@@ -24,12 +24,7 @@ Det belopp som då ska betalas är det högsta beloppet av de passagerna.
 using Norion.TollCalculator.Domain.Models;
 using Norion.TollCalculator.Domain.Repository;
 using Norion.TollCalculator.Infrastructure.Models;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Norion.TollCalculator.Infrastructure.Repository
 {
@@ -51,13 +46,21 @@ namespace Norion.TollCalculator.Infrastructure.Repository
                 throw new NullReferenceException();
 
             DateTime intervalStart = vehicle.TotalDailyPassages[0];
+            TimeSpan timeBetweenPassages;
             int tempFee = GetTollFee(intervalStart);
             int totalFee = 0;
+
             foreach (DateTime date in vehicle.TotalDailyPassages)
             {
                 int nextFee = GetTollFee(date);
-
-                TimeSpan timeBetweenPassages = DateTime.Now - vehicle.LastPassage;
+                if(vehicle.TotalDailyPassages.Count >= 2)
+                {
+                    timeBetweenPassages = vehicle.TotalDailyPassages[vehicle.TotalDailyPassages.Count - 2] - vehicle.LastPassage;
+                }
+                else
+                {
+                    timeBetweenPassages = DateTime.Now - vehicle.LastPassage;
+                }
 
                 if (timeBetweenPassages.TotalMinutes <= 60)
                 {
@@ -113,6 +116,7 @@ namespace Norion.TollCalculator.Infrastructure.Repository
             vehicles.Add(vehicle);
             await Task.CompletedTask;
             return vehicle.Id;
+            
         }
 
         private List<TollFee> ReadTollFees(string filePath)

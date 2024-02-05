@@ -11,20 +11,16 @@ namespace Norion.TollCalculator.Application.Service;
 
 public class TollService : ITollService
 { 
-    
-
     private readonly ITollRepository _repository;
+
     public TollService(ITollRepository repository)
     {
         _repository = repository;
-
     }
 
     public async Task AddPassage(Guid id, DateTime passageTime)
     {
         await _repository.AddPassage(id, passageTime);
-        
-        await Task.CompletedTask;
     }
 
     public async Task<Guid> AddVehicle(Vehicle vehicle)
@@ -34,7 +30,6 @@ public class TollService : ITollService
 
     public async Task<int> GetTollFee(Guid id)
     {
-       
         return await _repository.GetTotalTollFee(id);
     }
 }
