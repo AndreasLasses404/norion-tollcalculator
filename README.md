@@ -5,7 +5,16 @@
 ```
 [POST]
 # /api/Toll
-Creates a vehicle of the specified type in the body
+Creates a vehicle of the specified type in the body.
+Accepted vehicle types are:
+Car,
+Diplomat,
+Emergency,
+Foreign,
+Military,
+Motorbike,
+Tractor
+
 {
  "vehicleType": "string"
 }
