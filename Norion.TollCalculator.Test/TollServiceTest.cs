@@ -192,6 +192,14 @@ public class TollServiceTest
                 LastPassage = new DateTime(2023, 01, 22, 17, 25, 20),
                 TotalDailyPassages = [new DateTime(2023, 01, 22, 08, 05, 20), new DateTime(2023, 01, 22, 14, 30, 20), new DateTime(2023, 01, 22, 17, 25, 20)]
             }
+         },   
+         {
+            new Car
+            {
+                Id = Guid.NewGuid(),
+                LastPassage = new DateTime(2023, 01, 22, 17, 25, 20),
+                TotalDailyPassages = [new DateTime(2023, 12, 24, 08, 05, 20), new DateTime(2023, 12, 25, 14, 30, 20), new DateTime(2023, 01, 22, 17, 25, 20)]
+            }
          },
 
 
