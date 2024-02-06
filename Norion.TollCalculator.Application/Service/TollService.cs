@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,9 @@ public class TollService : ITollService
 
     public TollService(ITollRepository repository)
     {
-        TollFees = ReadTollFees("../Norion.TollCalculator.Infrastructure/TollCalculator.csv");
+
+        TollFees = ReadTollFees();
+
         _repository = repository;
     }
 
@@ -39,6 +42,9 @@ public class TollService : ITollService
         if (vehicle == null)
             throw new NullReferenceException();
 
+        if (vehicle.IsTollExempt)
+            return 0;
+
         DateTime intervalStart = vehicle.TotalDailyPassages[0];
         TimeSpan timeBetweenPassages;
         int tempFee = GetTollFee(intervalStart);
@@ -47,15 +53,8 @@ public class TollService : ITollService
         foreach (DateTime date in vehicle.TotalDailyPassages)
         {
             int nextFee = GetTollFee(date);
-            if (vehicle.TotalDailyPassages.Count >= 2)
-            {
-                timeBetweenPassages = vehicle.TotalDailyPassages[vehicle.TotalDailyPassages.Count - 2] - vehicle.LastPassage;
-            }
-            else
-            {
-                timeBetweenPassages = DateTime.Now - vehicle.LastPassage;
-            }
-
+            timeBetweenPassages = date - intervalStart;
+            
             if (timeBetweenPassages.TotalMinutes <= 60)
             {
                 if (totalFee > 0)
@@ -92,9 +91,13 @@ public class TollService : ITollService
         return totalFee;
     }
 
-    private List<TollFee> ReadTollFees(string filePath)
+    private List<TollFee> ReadTollFees()
     {
         List<TollFee> tollFees = new List<TollFee>();
+        var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+        var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+        var dirPath = Path.GetDirectoryName(codeBasePath);
+        var filePath = Path.Combine(dirPath + "\\TollCalculator.csv");
 
         try
         {
@@ -132,23 +135,10 @@ public class TollService : ITollService
         return tollFees;
     }
 
-    public int GetTollFee(DateTime date)
+    private int GetTollFee(DateTime date)
     {
         if (IsTollFreeDate(date)) return 0;
         return TollFees.Where(t => t.StartTime <= date.TimeOfDay && t.EndTime >= date.TimeOfDay).Select(t => t.Amount).FirstOrDefault();
-        //int hour = date.Hour;
-        //int minute = date.Minute; 
-        //
-        //if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-        //else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-        //else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-        //else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-        //else if (hour >= 8 && hour <= 14 && minute >= 30 && minute <= 59) return 8;
-        //else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-        //else if (hour == 15 && minute >= 0 || hour == 16 && minute <= 59) return 18;
-        //else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-        //else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-        //else return 0;
     }
 
     private bool IsTollFreeDate(DateTime date)

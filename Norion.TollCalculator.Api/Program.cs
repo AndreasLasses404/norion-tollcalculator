@@ -1,8 +1,10 @@
 using AutoMapper;
 using Norion.TollCalculator.Api.Mappers.AutoMapper;
 using Norion.TollCalculator.Application.Service;
+using Norion.TollCalculator.Domain.Context;
 using Norion.TollCalculator.Domain.Repository;
 using Norion.TollCalculator.Domain.Service;
+using Norion.TollCalculator.Infrastructure.Context;
 using Norion.TollCalculator.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,7 @@ IMapper mapper = mapperConfig.CreateMapper();
 
 builder.Services.AddSingleton<ITollRepository, TollRepository>();
 builder.Services.AddSingleton<ITollService, TollService>();
+builder.Services.AddSingleton<IVehicleContext, VehicleContext>();
 builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();

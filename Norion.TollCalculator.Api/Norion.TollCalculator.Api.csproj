@@ -18,4 +18,10 @@
     <ProjectReference Include="..\Norion.TollCalculator.Infrastructure\Norion.TollCalculator.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TollCalculator.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

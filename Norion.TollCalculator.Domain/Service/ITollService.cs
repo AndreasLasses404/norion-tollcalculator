@@ -5,12 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Norion.TollCalculator.Domain.Service
+namespace Norion.TollCalculator.Domain.Service;
+
+public interface ITollService
 {
-    public interface ITollService
-    {
-        Task<int> GetTotalTollFee(Guid id);
-        Task<Guid> AddVehicle(Vehicle vehicle);
-        Task AddPassage(Guid id, DateTime passageTime);
-    }
+    Task<int> GetTotalTollFee(Guid id);
+    Task<Guid> AddVehicle(Vehicle vehicle);
+    Task AddPassage(Guid id, DateTime passageTime);
 }

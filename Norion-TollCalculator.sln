@@ -5,13 +5,13 @@ VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norion.TollCalculator.Api", "Norion.TollCalculator.Api\Norion.TollCalculator.Api.csproj", "{E7EFB6B2-AF50-435A-A093-DD27F8E440C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norion.TollCalculator.Application", "Norion.TollCalculator.Application\Norion.TollCalculator.Application.csproj", "{7ECB4E4A-63B8-4627-BE7C-E0F66F845C52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norion.TollCalculator.Application", "Norion.TollCalculator.Application\Norion.TollCalculator.Application.csproj", "{7ECB4E4A-63B8-4627-BE7C-E0F66F845C52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norion.TollCalculator.Infrastructure", "Norion.TollCalculator.Infrastructure\Norion.TollCalculator.Infrastructure.csproj", "{01EA149B-CD1D-48A3-84BD-0BA3FBE1E82C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norion.TollCalculator.Infrastructure", "Norion.TollCalculator.Infrastructure\Norion.TollCalculator.Infrastructure.csproj", "{01EA149B-CD1D-48A3-84BD-0BA3FBE1E82C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norion.TollCalculator.Domain", "Norion.TollCalculator.Domain\Norion.TollCalculator.Domain.csproj", "{9ED56E64-8670-47B7-A9F2-FC8706BD89F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norion.TollCalculator.Domain", "Norion.TollCalculator.Domain\Norion.TollCalculator.Domain.csproj", "{9ED56E64-8670-47B7-A9F2-FC8706BD89F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norion.TollCalculator.Test", "Norion.TollCalculator.Test\Norion.TollCalculator.Test.csproj", "{F18C9FBB-C1BC-4BC7-A6F3-7145B9E6B616}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Norion.TollCalculator.Test", "Norion.TollCalculator.Test\Norion.TollCalculator.Test.csproj", "{F18C9FBB-C1BC-4BC7-A6F3-7145B9E6B616}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

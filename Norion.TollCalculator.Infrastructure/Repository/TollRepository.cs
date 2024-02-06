@@ -21,54 +21,48 @@ En bil som passerar flera betalstationer inom 60 minuter bara beskattas en gång
 Det belopp som då ska betalas är det högsta beloppet av de passagerna.
 */
 
+using Norion.TollCalculator.Domain.Context;
 using Norion.TollCalculator.Domain.Models;
 using Norion.TollCalculator.Domain.Repository;
-using Norion.TollCalculator.Infrastructure.Models;
-using System.Globalization;
 
-namespace Norion.TollCalculator.Infrastructure.Repository
+namespace Norion.TollCalculator.Infrastructure.Repository;
+
+public class TollRepository : ITollRepository
 {
-    public class TollRepository : ITollRepository
+
+    private readonly IVehicleContext _vehicleContext;
+
+    public TollRepository(IVehicleContext vehicleContext)
     {
+        _vehicleContext = vehicleContext;
+    }
 
-        private readonly List<Vehicle> vehicles = new List<Vehicle>();
+    public async Task<Vehicle> GetVehicle(Guid id)
+    {
+        await Task.CompletedTask;
+        return await _vehicleContext.GetVehicle(id);
+    }
 
-        public TollRepository()
-        {
+    public async Task AddPassage(Guid id, DateTime passageTime)
+    {
+        var vehicle = await _vehicleContext.GetVehicle(id);
+        if (vehicle == null)
+            throw new NullReferenceException(nameof(vehicle));
 
-        }
+        if(passageTime == default)
+            throw new InvalidDataException(nameof(passageTime));
 
-        public async Task<Vehicle> GetVehicle(Guid id)
-        {
-            await Task.CompletedTask;
-            return vehicles.FirstOrDefault(x => x.Id == id) ?? null;
-        }
+        if (passageTime > DateTime.Now)
+            throw new InvalidDataException(nameof(passageTime));
 
-        public async Task AddPassage(Guid id, DateTime passageTime)
-        {
-            var vehicle = vehicles.FirstOrDefault(x => x.Id == id);
-            if (vehicle == null)
-                throw new NullReferenceException(nameof(vehicle));
+        await _vehicleContext.AddPassage(vehicle, passageTime);
+    }
 
-            if(passageTime == default)
-                throw new InvalidDataException(nameof(passageTime));
+    public async Task<Guid> AddVehicle(Vehicle vehicle)
+    {
+        vehicle.Id = Guid.NewGuid();
+        await _vehicleContext.AddVehicle(vehicle);
+        return vehicle.Id;
 
-            if (passageTime > DateTime.Now)
-                throw new InvalidDataException(nameof(passageTime));
-
-            vehicle.LastPassage = passageTime;
-            vehicle.TotalDailyPassages.Add(passageTime);
-
-            await Task.CompletedTask;
-        }
-
-        public async Task<Guid> AddVehicle(Vehicle vehicle)
-        {
-            vehicle.Id = Guid.NewGuid();
-            vehicles.Add(vehicle);
-            await Task.CompletedTask;
-            return vehicle.Id;
-
-        }
     }
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Norion.TollCalculator.Domain\Norion.TollCalculator.Domain.csproj" />
+    <ProjectReference Include="..\Norion.TollCalculator.Infrastructure\Norion.TollCalculator.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

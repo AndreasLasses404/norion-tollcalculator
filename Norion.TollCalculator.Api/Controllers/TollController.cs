@@ -27,7 +27,7 @@ public class TollController: ControllerBase
     {
         try
         {
-            return Ok(await _service.GetTollFee(id));
+            return Ok(await _service.GetTotalTollFee(id));
         }
         catch (Exception ex)
         {
